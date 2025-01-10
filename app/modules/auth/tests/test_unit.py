@@ -65,6 +65,16 @@ def test_signup_user_unsuccessful(test_client):
     assert response.request.path == url_for("auth.show_signup_form"), "Signup was unsuccessful"
     assert f"Email {email} in use".encode("utf-8") in response.data
 
+def test_count_after_singup(test_client):
+    def test_signup_user_unsuccessful(test_client):
+    email = "test@example.com"
+    response = test_client.post(
+        "/signup", data=dict(name="Test", surname="Foo", email=email, password="test1234"), follow_redirects=True
+    )
+    assert response.request.path == url_for("auth.show_signup_form"), "Signup was unsuccessful"
+    assert f"Email {email} in use".encode("utf-8") in response.data
+    assert UserRepository().count() == 1
+
 
 def test_signup_user_successful(test_client):
     response = test_client.post(
